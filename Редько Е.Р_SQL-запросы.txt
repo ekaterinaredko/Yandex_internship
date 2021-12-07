@@ -1,0 +1,21 @@
+#1.1
+SELECT COUNT(promocode_id)/COUNT(*) * 100 FROM orders
+#1.2
+SELECT name, number
+FROM (SELECT promocode_id as id, count(*) as number
+FROM orders
+WHERE promocode_id is NOT NULL
+GROUP BY promocode_id)
+LEFT JOIN promocodes ON id = promocode_id
+WHERE number = (SELECT max(number)
+FROM (SELECT count(*) as number
+FROM orders WHERE promocode_id is NOT NULL
+GROUP BY promocode_id)
+#2
+SELECT office_name, SUM(cookies) as cnt
+FROM buildings b
+LEFT JOIN consumption c on c.coffe_point_id=b.coffe_point_id
+GROUP BY b.office_id
+ORDER BY cnt DESC
+HAVING cnt<1000
+LIMIT 10
